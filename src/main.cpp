@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
         1.f, 1.f, 0.f,
         -1.f, 1.f, 0.f,
         -1.f, -1.f, 0.f,
-        1.f, 1.f, 0.f,
+        0.8f, 1.f, 0.f,
         -1.f, -1.f, 0.f,
         1.f, -1.f, 0.f
   };
@@ -109,8 +109,10 @@ int main(int argc, char* argv[])
 
   // Load Shader
 
-  const char *vertfname ="fragshader.frag";
+  const char *vertfname ="vertexshader.glsl";
   char *vertexShaderSource = filetobuf(vertfname);
+
+  printf("meh %s",vertexShaderSource);
 
   unsigned int vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -133,7 +135,7 @@ int main(int argc, char* argv[])
   const char *fragfname ="fragshader.frag";
   char *fragShaderSource = filetobuf(fragfname);
 
-  printf("meh %s",fragShaderSource);
+  printf("meh2 %s",fragShaderSource);
 
   unsigned int fragShader;
   fragShader = glCreateShader(GL_FRAGMENT_SHADER);

@@ -1,8 +1,10 @@
 #version 460 core
-in vec3 in_Position;
-in vec3 in_Color;
-out vec3 fragPos;
-out vec3 f_Color;
+
+layout(location = 0) in vec3 in_Position;
+layout(location = 1) in vec3 in_Color;
+
+layout(location = 0) out vec3 fragPos;
+layout(location = 1) out vec3 f_Color;
 void main(void)
 {
     fragPos = in_Position;
