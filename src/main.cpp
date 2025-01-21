@@ -109,17 +109,8 @@ int main(int argc, char* argv[])
 
   // Load Shader
 
-  const char *vertexShaderSource = "#version 150 core\n"
-  "in vec3 in_Position;"
-  "in vec3 in_Color;"
-  "out vec3 fragPos;"
-  "out vec3 f_Color;"
-  "void main(void)"
-  "{"
-  "    fragPos = in_Position;"
-  "    gl_Position = vec4(in_Position.x, in_Position.y, in_Position.z, 1.0);"
-  "    f_Color = in_Color;"
-  "}";
+  const char *vertfname ="fragshader.frag";
+  char *vertexShaderSource = filetobuf(vertfname);
 
   unsigned int vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -139,8 +130,8 @@ int main(int argc, char* argv[])
     }
   }
 
-  const char *fname ="shader.frag";
-  char *fragShaderSource = filetobuf(fname);
+  const char *fragfname ="fragshader.frag";
+  char *fragShaderSource = filetobuf(fragfname);
 
   printf("meh %s",fragShaderSource);
 
