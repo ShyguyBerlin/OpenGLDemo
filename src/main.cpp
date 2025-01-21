@@ -3,6 +3,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <fstream>
+
 // #include <iostream>
 
 // define callbacks and functions
