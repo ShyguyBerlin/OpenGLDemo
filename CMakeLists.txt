@@ -4,11 +4,14 @@ cmake_policy(SET CMP0072 NEW)
 
 find_package(OpenGL REQUIRED)
 
+include_directories(src/include)
 
 add_executable(opengl_project 
     src/main.cpp
     src/glad/glad.c
-    src/glad/glad.h
+    src/include/glad.h
+    src/include/helpers/VBOhelper.h
+    src/helpers/VBOhelper.cpp
 )
 
 target_link_libraries(opengl_project 

@@ -1,9 +1,13 @@
 #include <iostream>
-#include "glad/glad.h"
+#include <glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <fstream>
+
+#include <helpers/VBOhelper.h>
+
+using namespace helpers;
 
 // #include <iostream>
 
@@ -32,6 +36,10 @@ char* filetobuf(const char *file)
 
 int main(int argc, char* argv[])
 {
+
+  VBOhandle a;
+  a.setName("I am a class");
+  a.printName();
   const unsigned int uiWidth = 800;
   const unsigned int uiHeight = 600;
   GLFWwindow* pWindow;
@@ -102,7 +110,7 @@ int main(int argc, char* argv[])
   glGenBuffers(1, &ColorArrayID);
   glBindBuffer(GL_ARRAY_BUFFER, ColorArrayID);
   glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-  /* Specify that our coordinate data is going into attribute index 0, and contains two floats per vertex */
+  /* Specify that our coordinate data is going into attribute index 1, and contains two floats per vertex */
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
   /* Enable attribute index 0 as being used */
   glEnableVertexAttribArray(1);
