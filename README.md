@@ -24,7 +24,12 @@ list(APPEND CMAKE_PREFIX_PATH "C:/msys64/mingw64/lib/cmake/glfw3")
 find_package(glfw3 3.4 REQUIRED)
 ```
 
-or whatever your msys64 path is to CMakeLists.txt
+is to CMakeLists.txt and 
+```
+C:\msys64\mingw64\bin
+```
+
+to PATH (system variable)
 
 # Build
 Optimally you can run any cmake wrapper in your IDE. There is a really nice extension for VSCode that does that for you, with a bit of configuration. Else you can also run the following command:
