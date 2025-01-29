@@ -40,9 +40,6 @@ char* filetobuf(const char *file)
 int main(int argc, char* argv[])
 {
 
-  VBOhandle a;
-  a.setName("I am a class");
-  a.printName();
   const unsigned int uiWidth = 800;
   const unsigned int uiHeight = 600;
   GLFWwindow* pWindow;

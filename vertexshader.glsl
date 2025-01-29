@@ -10,4 +10,4 @@ void main(void)
     fragPos = in_Position;
     gl_Position = vec4(in_Position.x, in_Position.y, in_Position.z, 1.0);
     f_Color = in_Color;
-};
+}

@@ -1,6 +1,5 @@
 #include <helpers/VBOhelper.h>
 //#include <ostream>
-#include <glad.h>
 
 namespace helpers{
 

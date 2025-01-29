@@ -1,12 +1,14 @@
 #ifndef VBO_HANDLE_H
 #define VBO_HANDLE_H
-#include <GLFW/glfw3.h>
+#include <glad.h>
+//#define GLFW_INCLUDE_NONE
+//#include <GLFW/glfw3.h>
 #include <vector>
 
 namespace helpers{
 
 
-
+// Create this, then bind it, then call add_attributes_.. for each property you need
 class VBOhelper{
     public:
     GLuint VBO_id;
