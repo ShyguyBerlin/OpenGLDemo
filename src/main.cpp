@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include <helpers/VBOhelper.h>
+#include <helpers/shadertools.h>
 
 using namespace helpers;
 
@@ -28,8 +29,6 @@ char* filetobuf(const char *file)
     buffer = (char*)malloc(length+1);    // allocate memory for a buffer of appropriate dimension
     t.read(buffer, length);       // read the whole file into the buffer
     buffer[length]='\0';
-    printf("%s",buffer
-    );
     t.close();
     return buffer;    
 }
@@ -48,8 +47,8 @@ int main(int argc, char* argv[])
 
   if(!glfwInit()) return -1;                                    // initialize library
 
-  glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4);               // open a OpenGL 3.2 context
-  glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4);               // open a OpenGL 4.0 context
+  glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0);
   glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
 
@@ -119,48 +118,13 @@ int main(int argc, char* argv[])
 
   const char *vertfname ="vertexshader.glsl";
   char *vertexShaderSource = filetobuf(vertfname);
-
-  printf("meh %s",vertexShaderSource);
-
   unsigned int vertexShader;
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-  glCompileShader(vertexShader);
-
-  {
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if(!success)
-    {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" <<
-    infoLog << std::endl;
-    }
-  }
+  create_and_compile_shader(&vertexShader,GL_VERTEX_SHADER,vertexShaderSource);
 
   const char *fragfname ="fragshader.frag";
   char *fragShaderSource = filetobuf(fragfname);
-
-  printf("meh2 %s",fragShaderSource);
-
   unsigned int fragShader;
-  fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragShader, 1, &fragShaderSource, NULL);
-  glCompileShader(fragShader);
-  {
-    int success;
-    char infoLog[512];
-    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success);
-
-    if(!success)
-    {
-    glGetShaderInfoLog(fragShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" <<
-    infoLog << std::endl;
-    }
-  }
+  create_and_compile_shader(&fragShader,GL_FRAGMENT_SHADER,fragShaderSource);
 
   // Linking the shaders
 
@@ -175,16 +139,7 @@ int main(int argc, char* argv[])
 
   glLinkProgram(shaderProgram);
 
-  {
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-      glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" <<
-      infoLog << std::endl;
-    }
-  }
+  print_shader_program_status(&shaderProgram);
 
   glDeleteShader(vertexShader);
   glDeleteShader(fragShader);
