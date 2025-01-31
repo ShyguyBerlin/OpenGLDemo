@@ -6,7 +6,12 @@ list(APPEND CMAKE_PREFIX_PATH "C:/msys64/mingw64/lib/cmake/glfw3")
 find_package(OpenGL REQUIRED)
 
 include_directories(src/include)
-#find_package(glfw3 3.4 REQUIRED)
+
+# Linux uses slightly older version and can import automatically 
+# so we only set this on windoof
+if (WIN32)
+    find_package(glfw3 3.4 REQUIRED)
+endif()
 
 add_executable(opengl_project 
     src/main.cpp
