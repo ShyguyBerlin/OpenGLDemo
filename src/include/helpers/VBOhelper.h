@@ -1,5 +1,6 @@
 #ifndef VBO_HANDLE_H
 #define VBO_HANDLE_H
+
 #include <glad.h>
 //#define GLFW_INCLUDE_NONE
 //#include <GLFW/glfw3.h>
@@ -16,7 +17,7 @@ class VBOhelper{
     std::vector<GLuint> VA_ids;
     VBOhelper(size_t attributes);
     void bind();
-    void add_attributes_float(GLfloat* att_array, int size, int idx);
+    void add_attributes_float(GLfloat* att_array, size_t size, int idx, int dim);
 };
 
 };

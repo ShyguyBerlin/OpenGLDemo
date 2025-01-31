@@ -1,5 +1,5 @@
-#ifndef shadertools_h
-#define shadertools_h
+#ifndef SHADERTOOLS_H
+#define SHADERTOOLS_H
 
 namespace helpers{
 

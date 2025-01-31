@@ -6,13 +6,14 @@ list(APPEND CMAKE_PREFIX_PATH "C:/msys64/mingw64/lib/cmake/glfw3")
 find_package(OpenGL REQUIRED)
 
 include_directories(src/include)
-find_package(glfw3 3.4 REQUIRED)
+#find_package(glfw3 3.4 REQUIRED)
 
 add_executable(opengl_project 
     src/main.cpp
     src/glad/glad.c
-    src/include/glad.h
-    src/include/helpers/VBOhelper.h
+    src/helpers/CommonObjectWrappers.cpp
+    src/helpers/TerrainObject.cpp
+    src/helpers/shadertools.cpp
     src/helpers/VBOhelper.cpp
 )
 

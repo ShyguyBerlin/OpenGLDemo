@@ -75,12 +75,31 @@ int main(int argc, char* argv[])
   //Load vertices
 
   GLfloat vertices[] = {
-        1.f, 1.f, 0.f,
-        -1.f, 1.f, 0.f,
-        -1.f, -1.f, 0.f,
-        0.8f, 1.f, 0.f,
-        -1.f, -1.f, 0.f,
-        1.f, -1.f, 0.f
+        1.f, 1.f, 0.f,//
+        0.f, 1.f, 0.f,
+        0.,  0.,  0.,
+        1.,  1.,  0.,//
+        0.,  0.,  0.,
+        1.,  0.,  0.,
+        1.,  0.,  0.,//
+        0.,  0.,  0.,
+        0., -1.,  0.,
+        1.,  0.,  0.,//
+        0., -1.,  0.,
+        1., -1.,  0.,
+        0.,  1.,  0.,//
+       -1.,  1.,  0.,
+       -1.,  0.,  0.,
+        0.,  1.,  0.,//
+       -1.,  0.,  0.,
+        0.,  0.,  0.,
+        0.,  0.,  0.,//
+       -1.,  0.,  0.,
+       -1., -1.,  0.,
+        0.,  0.,  0.,//
+       -1., -1.,  0.,
+        0., -1.,  0.
+
   };
 
   const GLfloat colors[6][3] = {
@@ -94,8 +113,7 @@ int main(int argc, char* argv[])
   GLuint VertexArrayID;
   GLuint ColorArrayID;
   GLuint VertexOjectID;
-  glGenVertexArrays(1, &VertexOjectID);
-  glBindVertexArray(VertexOjectID);
+
 
 
   glGenBuffers(1, &VertexArrayID);
@@ -106,13 +124,13 @@ int main(int argc, char* argv[])
   /* Enable attribute index 0 as being used */
   glEnableVertexAttribArray(0);
 
-  glGenBuffers(1, &ColorArrayID);
-  glBindBuffer(GL_ARRAY_BUFFER, ColorArrayID);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+  //glGenBuffers(1, &ColorArrayID);
+  //glBindBuffer(GL_ARRAY_BUFFER, ColorArrayID);
+  //glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
   /* Specify that our coordinate data is going into attribute index 1, and contains two floats per vertex */
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
   /* Enable attribute index 0 as being used */
-  glEnableVertexAttribArray(1);
+  //glEnableVertexAttribArray(1);
 
   // Load Shader
 
@@ -135,7 +153,7 @@ int main(int argc, char* argv[])
   glAttachShader(shaderProgram, fragShader);
 
   glBindAttribLocation(shaderProgram, 0, "in_Position");
-  glBindAttribLocation(shaderProgram, 1, "in_Color");
+  //glBindAttribLocation(shaderProgram, 1, "in_Color");
 
   glLinkProgram(shaderProgram);
 
@@ -146,15 +164,19 @@ int main(int argc, char* argv[])
 
   glClearColor(0.0, 0.3, 0.3, 1.0);
 
+
+
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
   {
+    float time= (float)clock() / CLOCKS_PER_SEC;
+
     // g_pcRenderer->render();                                     // render the triangle
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shaderProgram);
     glBindVertexArray(VertexOjectID);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 3*8);
 
     glFlush();                                                  // process all comands in OpenGL pipeline
 
