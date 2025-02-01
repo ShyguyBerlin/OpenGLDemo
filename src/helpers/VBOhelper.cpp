@@ -6,8 +6,9 @@
 
 namespace helpers{
 
-VBOhelper::VBOhelper(size_t attributes){
+VBOhelper::VBOhelper(size_t attributes) : VA_ids(attributes){
     glGenVertexArrays(1, &VBO_id);
+    
 };
 
 void VBOhelper::bind(){
@@ -15,7 +16,7 @@ void VBOhelper::bind(){
 }
 
 void VBOhelper::add_attributes_float(GLfloat* att_array, size_t size, int idx, int dim){
-
+  bind();
   glGenBuffers(1, &VA_ids[idx]);
   glBindBuffer(GL_ARRAY_BUFFER, VA_ids[idx]);
   glBufferData(GL_ARRAY_BUFFER, size, att_array, GL_STATIC_DRAW);

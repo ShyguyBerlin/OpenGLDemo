@@ -5,8 +5,8 @@
 
 #include <fstream>
 
-#include <helpers/VBOhelper.h>
 #include <helpers/shadertools.h>
+#include <helpers/CommonObjectWrappers.h>
 
 using namespace helpers;
 
@@ -110,19 +110,10 @@ int main(int argc, char* argv[])
     {  0.0,  1.0,  0.0  }, /* Green */
     {  0.0,  0.0,  1.0  } }; /* Blue */
 
-  GLuint VertexArrayID;
-  GLuint ColorArrayID;
-  GLuint VertexOjectID;
+  Mesh3D mesh(8);
+  //printf("actual array size: %ul\n",sizeof(vertices));
 
-
-
-  glGenBuffers(1, &VertexArrayID);
-  glBindBuffer(GL_ARRAY_BUFFER, VertexArrayID);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  /* Specify that our coordinate data is going into attribute index 0, and contains two floats per vertex */
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  /* Enable attribute index 0 as being used */
-  glEnableVertexAttribArray(0);
+  mesh.set_positions(vertices);
 
   //glGenBuffers(1, &ColorArrayID);
   //glBindBuffer(GL_ARRAY_BUFFER, ColorArrayID);
@@ -162,9 +153,9 @@ int main(int argc, char* argv[])
   glDeleteShader(vertexShader);
   glDeleteShader(fragShader);
 
-  glClearColor(0.0, 0.3, 0.3, 1.0);
+  glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
-
+  mesh.set_shader(shaderProgram);
 
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
@@ -174,9 +165,7 @@ int main(int argc, char* argv[])
     // g_pcRenderer->render();                                     // render the triangle
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VertexOjectID);
-    glDrawArrays(GL_TRIANGLES, 0, 3*8);
+    mesh.draw();
 
     glFlush();                                                  // process all comands in OpenGL pipeline
 
