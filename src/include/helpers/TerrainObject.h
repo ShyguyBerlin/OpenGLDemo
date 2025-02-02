@@ -6,12 +6,7 @@
 
 namespace helpers{
 
-class TerrainObject{
-    public:
-    Mesh3D mesh;
-    TerrainObject(unsigned int size_X, unsigned int size_Y);
 
-};
 
 }
 

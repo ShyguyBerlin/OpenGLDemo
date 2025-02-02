@@ -3,7 +3,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <fstream>
 
 #include <helpers/shadertools.h>
 #include <helpers/CommonObjectWrappers.h>
@@ -17,30 +16,14 @@ void errorCallback( int iError, const char* pcDescription);
 //void resizeCallback(GLFWwindow* pWindow, int width, int height );
 //void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods);
 
-char* filetobuf(const char *file)
-{
-    char *buffer;
-    std::ifstream t;
-    int length;
-    t.open(file);      // open input file
-    t.seekg(0, std::ios::end);    // go to the end
-    length = t.tellg();           // report location (this is the length)
-    t.seekg(0, std::ios::beg);    // go back to the beginning
-    buffer = (char*)malloc(length+1);    // allocate memory for a buffer of appropriate dimension
-    t.read(buffer, length);       // read the whole file into the buffer
-    buffer[length]='\0';
-    t.close();
-    return buffer;    
-}
-
 // global variables :(
 //RenderIf* g_pcRenderer = NULL;
 
 int main(int argc, char* argv[])
 {
 
-  const unsigned int uiWidth = 800;
-  const unsigned int uiHeight = 600;
+  const unsigned int uiWidth = 1440;
+  const unsigned int uiHeight = 900;
   GLFWwindow* pWindow;
 
   glfwSetErrorCallback(errorCallback);                          // set a callback for GLFW errors
@@ -110,52 +93,25 @@ int main(int argc, char* argv[])
     {  0.0,  1.0,  0.0  }, /* Green */
     {  0.0,  0.0,  1.0  } }; /* Blue */
 
-  Mesh3D mesh(8);
-  //printf("actual array size: %ul\n",sizeof(vertices));
+  Mesh3D mesh(8*3);
 
   mesh.set_positions(vertices);
 
-  //glGenBuffers(1, &ColorArrayID);
-  //glBindBuffer(GL_ARRAY_BUFFER, ColorArrayID);
-  //glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-  /* Specify that our coordinate data is going into attribute index 1, and contains two floats per vertex */
-  //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  /* Enable attribute index 0 as being used */
-  //glEnableVertexAttribArray(1);
-
   // Load Shader
 
-  const char *vertfname ="vertexshader.glsl";
-  char *vertexShaderSource = filetobuf(vertfname);
-  unsigned int vertexShader;
-  create_and_compile_shader(&vertexShader,GL_VERTEX_SHADER,vertexShaderSource);
+  GLuint basicShader;
+  make_shader_program(&basicShader,"vertexshader.glsl","fragshader.frag");
+  mesh.set_shader(basicShader);
 
-  const char *fragfname ="fragshader.frag";
-  char *fragShaderSource = filetobuf(fragfname);
-  unsigned int fragShader;
-  create_and_compile_shader(&fragShader,GL_FRAGMENT_SHADER,fragShaderSource);
+  TerrainObject water_plane(50,50,0.5f);
+  GLuint waterShader;
+  make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
+  water_plane.mesh.set_shader(waterShader);
 
-  // Linking the shaders
-
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram();
-
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragShader);
-
-  glBindAttribLocation(shaderProgram, 0, "in_Position");
-  //glBindAttribLocation(shaderProgram, 1, "in_Color");
-
-  glLinkProgram(shaderProgram);
-
-  print_shader_program_status(&shaderProgram);
-
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragShader);
-
+  glEnable( GL_BLEND );
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
-  mesh.set_shader(shaderProgram);
 
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
@@ -166,7 +122,7 @@ int main(int argc, char* argv[])
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mesh.draw();
-
+    water_plane.draw();
     glFlush();                                                  // process all comands in OpenGL pipeline
 
     glfwSwapBuffers(pWindow);                                   // swap front and back buffers
