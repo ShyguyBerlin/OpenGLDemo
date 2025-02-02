@@ -13,5 +13,5 @@ void main(void)
   vec3 col=color;
   //if(screenPos.x<0.3){col.xyz=vec3(1.0,1.0,1.0);}
   col*=light_fac;
-  FragColor = vec4(col,0.05f*light_fac);
+  FragColor = vec4(col,0.5f*light_fac);
 }

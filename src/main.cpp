@@ -103,20 +103,23 @@ int main(int argc, char* argv[])
   make_shader_program(&basicShader,"vertexshader.glsl","fragshader.frag");
   mesh.set_shader(basicShader);
 
-  TerrainObject water_plane(50,50,0.5f);
+  TerrainObject water_plane(150,150,0.1f);
   GLuint waterShader;
   make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
   water_plane.mesh.set_shader(waterShader);
+
+  GLint timeLocation = glGetUniformLocation(waterShader, "time");
 
   glEnable( GL_BLEND );
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
-
+  
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
   {
-    float time= (float)clock() / CLOCKS_PER_SEC;
+    float time=  glfwGetTime();
+    glUniform1f(timeLocation,time);
 
     // g_pcRenderer->render();                                     // render the triangle
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
