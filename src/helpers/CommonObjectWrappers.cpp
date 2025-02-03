@@ -10,10 +10,11 @@ Mesh3D::Mesh3D(size_t vertices) : vbo(3){
 
 void Mesh3D::set_positions(GLfloat* arr){
     /* Use the following for debugging
-    printf("Setting positions! %d\n",3*vertex_count);
-    for(int i=0;i<3*vertex_count;i++){
-        printf("%d: %f\n",i,arr[i]);
-    }*/
+    printf("Setting positions! %d\n",3*vertex_count);*/
+    for(int i=4998*3;i<3*vertex_count;i++){
+        printf("\nx: %f y: %f z: %f\n",arr[i++],arr[i++],arr[i]);
+    }
+
     vbo.add_attributes_float(arr,sizeof(GLfloat)*3*vertex_count,0,3);
     //printf("calculated array size: %ul\n",sizeof(GLfloat)*9*vertex_count);
 }
@@ -44,7 +45,7 @@ void Mesh3D::draw_strip(GLint from, GLsizei to){
 
 // Terrain Object
 
-TerrainObject::TerrainObject(unsigned int size_X, unsigned int size_Y,float grid_dist) : mesh(size_X*size_Y*2){
+TerrainObject::TerrainObject(unsigned int size_X, unsigned int size_Y,float grid_dist) : mesh((1+size_X)*size_Y*2){
     cols=size_X;
     rows=size_Y;
 
@@ -66,16 +67,16 @@ TerrainObject::TerrainObject(unsigned int size_X, unsigned int size_Y,float grid
         positions[c]=glm::vec3(0.f,0.f,(float)y*grid_dist)+offset;
         colors[c]=glm::vec3(0.f,0.f,0.f);
         normals[c++]=glm::vec3(0.f,1.f,0.f);
-
+        if(y==rows-1){
+            printf("\nx: %lf z: %lf",positions[c-1].x,positions[c-1].z);
+        }
         positions[c]=glm::vec3(0.f,0.f,(float)(y+1)*grid_dist)+offset;
         colors[c]=glm::vec3(0.f,0.f,0.f);
         normals[c++]=glm::vec3(0.f,1.f,0.f);
-
         for(int x=0;x<cols;x++){
             positions[c]=glm::vec3((float)(x+1)*grid_dist,0.f,(float)y*grid_dist)+offset;
             colors[c]=glm::vec3(0.f,0.f,0.f);
             normals[c++]=glm::vec3(0.f,1.f,0.f);
-
             positions[c]=glm::vec3((float)(x+1)*grid_dist,0.f,(float)(y+1)*grid_dist)+offset;
             colors[c]=glm::vec3(0.f,0.f,0.f);
             normals[c++]=glm::vec3(0.f,1.f,0.f);
@@ -90,8 +91,7 @@ TerrainObject::TerrainObject(unsigned int size_X, unsigned int size_Y,float grid
 
 void TerrainObject::draw(){
     for(int i=0;i<rows;i++){
-        mesh.draw_strip(i*2*(cols+1),(i+1)*2*(cols+1));
-        //printf("Hey I just drew vertices %d to %d!\n",i*2*(cols+1),(i+1)*2*(cols+1));
+        mesh.draw_strip(i*2*(cols+1),2*(cols+1));
     }
 }
 

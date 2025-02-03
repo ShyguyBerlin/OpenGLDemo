@@ -6,5 +6,5 @@ void main(void)
 {
   vec3 col=f_Color;
   if(fragPos.x<0.3){col.xyz=vec3(1.0,1.0,1.0);}
-  FragColor = vec4(col,1.0f);
+  FragColor = vec4(col,.4f);
 }

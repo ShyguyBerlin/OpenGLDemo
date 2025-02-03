@@ -11,7 +11,7 @@ float RENDER_DISTANCE=40.;
 void main(void)
 {
 
-    vec3 camPos=vec3(0.,0.,-3.);
+    vec3 camPos=vec3(0.,0.,-10.);
 
     // translate by cam position
 

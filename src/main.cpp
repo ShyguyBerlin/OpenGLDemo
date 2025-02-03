@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
   make_shader_program(&basicShader,"vertexshader.glsl","fragshader.frag");
   mesh.set_shader(basicShader);
 
-  TerrainObject water_plane(150,150,0.1f);
+  TerrainObject water_plane(125,125,0.24f);
   GLuint waterShader;
   make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
   water_plane.mesh.set_shader(waterShader);
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 
     glfwSwapBuffers(pWindow);                                   // swap front and back buffers
 
-    glfwWaitEvents();                                           // pull the process events
+    glfwPollEvents();                                           // pull the process events
   }
 
   // free renderer
