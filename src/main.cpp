@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 
+#include <helpers/statistics.h>
 #include <helpers/shadertools.h>
 #include <helpers/CommonObjectWrappers.h>
 
@@ -127,6 +128,8 @@ int main(int argc, char* argv[])
     mesh.draw();
     water_plane.draw();
     glFlush();                                                  // process all comands in OpenGL pipeline
+
+    fps_counter();
 
     glfwSwapBuffers(pWindow);                                   // swap front and back buffers
 

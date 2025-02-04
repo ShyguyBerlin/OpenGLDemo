@@ -20,6 +20,7 @@ add_executable(opengl_project
     src/helpers/TerrainObject.cpp
     src/helpers/shadertools.cpp
     src/helpers/VBOhelper.cpp
+    src/helpers/statistics.cpp
 )
 
 target_link_libraries(opengl_project

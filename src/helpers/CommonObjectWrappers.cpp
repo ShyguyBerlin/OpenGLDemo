@@ -10,10 +10,10 @@ Mesh3D::Mesh3D(size_t vertices) : vbo(3){
 
 void Mesh3D::set_positions(GLfloat* arr){
     /* Use the following for debugging
-    printf("Setting positions! %d\n",3*vertex_count);*/
+    printf("Setting positions! %d\n",3*vertex_count);
     for(int i=4998*3;i<3*vertex_count;i++){
         printf("\nx: %f y: %f z: %f\n",arr[i++],arr[i++],arr[i]);
-    }
+    }*/
 
     vbo.add_attributes_float(arr,sizeof(GLfloat)*3*vertex_count,0,3);
     //printf("calculated array size: %ul\n",sizeof(GLfloat)*9*vertex_count);
