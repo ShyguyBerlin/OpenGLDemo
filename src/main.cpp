@@ -2,7 +2,7 @@
 #include <glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-
+#include <cmath>
 
 #include <helpers/statistics.h>
 #include <helpers/shadertools.h>
@@ -110,23 +110,34 @@ int main(int argc, char* argv[])
   water_plane.mesh.set_shader(waterShader);
 
   GLint timeLocation = glGetUniformLocation(waterShader, "time");
+  GLint camLocation = glGetUniformLocation(waterShader, "camPos");
+  GLint lightLocation = glGetUniformLocation(waterShader, "light_src");
+  GLint specularLocation = glGetUniformLocation(waterShader, "specular");
+  GLint ambientLocation = glGetUniformLocation(waterShader, "ambient");
 
   glEnable( GL_BLEND );
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
-  
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
   {
     float time=  glfwGetTime();
-    glUniform1f(timeLocation,time);
 
     // g_pcRenderer->render();                                     // render the triangle
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    mesh.load_shader();
     mesh.draw();
+    
+    water_plane.mesh.load_shader();
+    glUniform1f(timeLocation,time);
+    glUniform3f(camLocation,0.f,0.f,-3.f);
+    glUniform3f(lightLocation,4.f,6.f,30.f+sin(time/4.f)*30.f);//+time*8.f);
+    glUniform1f(specularLocation,64.f);
+    glUniform1f(ambientLocation,0.0f);
     water_plane.draw();
+
+
     glFlush();                                                  // process all comands in OpenGL pipeline
 
     fps_counter();

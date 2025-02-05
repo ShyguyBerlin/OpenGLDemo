@@ -11,6 +11,7 @@ layout(location = 3) out vec3 normal;
 layout(location = 4) out vec3 camVec;
 
 uniform float time;
+uniform vec3 camPos;
 
 float RENDER_DISTANCE=40.;
 float NOISE_GRAIN=0.9f;
@@ -44,10 +45,10 @@ float noise(vec2 p) {
     float amp = 0.5;
     float freq = 1.0;
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 2; i++) {
         sum += amp * fnoise(p * freq);
         amp *= 0.5;
-        freq *= 2.0;
+        freq *= 1.5;
     }
     return sum;
 }
@@ -72,7 +73,6 @@ void main(void)
 {
     worldPos=in_Position;
     normal=in_Normal;
-    vec3 camPos=vec3(0.,0.,-3.);
 
     // World Space transformation on gl_Position
 
@@ -84,7 +84,7 @@ void main(void)
     //normal=vec3(normal.x,normal.z,-normal.y);
 
     worldPos.y+=-3.f;
-    worldPos.z+=8.f;
+    worldPos.z+=16.f;
 
     // translate by cam position
     camVec=camPos - worldPos;

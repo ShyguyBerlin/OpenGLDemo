@@ -31,14 +31,16 @@ void Mesh3D::set_shader(GLuint _shader){
     shader=_shader;
 }
 
-void Mesh3D::draw(){
+void Mesh3D::load_shader(){
     glUseProgram(shader);
+}
+
+void Mesh3D::draw(){
     vbo.bind();
     glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 }
 
 void Mesh3D::draw_strip(GLint from, GLsizei to){
-    glUseProgram(shader);
     vbo.bind();
     glDrawArrays(GL_TRIANGLE_STRIP, from, to);
 }

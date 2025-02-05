@@ -24,6 +24,7 @@ class Mesh3D{
     void set_colors(GLfloat *arr);
     void set_normals(GLfloat *arr);
     void set_shader(GLuint _shader);
+    void load_shader(void);
     void draw();
     void draw_strip(GLint from, GLsizei to);
     void translate(); // TODO
