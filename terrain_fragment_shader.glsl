@@ -10,19 +10,32 @@ uniform float specular;
 uniform float ambient;
 
 out vec4 FragColor;
+
+vec3 wave_dir=vec3(1.1f,10.f,0.4f);
+
 void main(void)
 {
   float diffuse_f = dot(normalize(light_src-worldPos),normal);
+<<<<<<< HEAD
   vec3 light_vec=worldPos-light_src;
   vec3 local_camVec = camVec-worldPos;
   /*vec3 lightcam = normalize((-light_vec)+local_camVec);
   float specular_f = max(pow(dot(lightcam,normal),specular),0.f)*20.;*/ // blinn-phong model
-  float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(local_camVec)),specular),0.f)*20.; //phong model
+=======
+  float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(camVec-worldPos)),specular),0.f)*(specular+2.f)/(3.14159*2.f); // phong model
+>>>>>>> 14ce15e3b6a01d6c0bd78a1421b53ce93af41fa1
   float ambient_f= ambient;
 
   float light_fac=diffuse_f+ambient_f+specular_f;
+
+
   vec3 col=color;
+
+  float wave_f=max(pow(1.f-(normal.y-0.8f)*5.f,1.f),0.f);
+
+  col=(1.f-wave_f)*col+(wave_f*vec3(1.f,1.f,1.f));
+
   //if(screenPos.x<0.3){col.xyz=vec3(1.0,1.0,1.0);}
-  col*=light_fac;
+  col=col*light_fac;
   FragColor = vec4(col,1.0f);//0.5f*light_fac);
 }

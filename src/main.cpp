@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
   glfwMakeContextCurrent(pWindow);                              // make the render context current
   gladLoadGL();                                                 // load all the GL commands
-  glfwSwapInterval(1);                                          // synchronize with display update
+  glfwSwapInterval(0);                                          // synchronize with display update
 
   // set callback functions
   // glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
   make_shader_program(&basicShader,"vertexshader.glsl","fragshader.frag");
   mesh.set_shader(basicShader);
 
-  TerrainObject water_plane(125,125,0.24f);
+  TerrainObject water_plane(250,250,0.1f);
   GLuint waterShader;
   make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
   water_plane.mesh.set_shader(waterShader);
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
     glUniform3f(camLocation,0.f,0.f,-3.f);
     glUniform3f(lightLocation,4.f,6.f,30.f+sin(time/4.f)*30.f);//+time*8.f);
     glUniform1f(specularLocation,64.f);
-    glUniform1f(ambientLocation,0.0f);
+    glUniform1f(ambientLocation,0.02f);
     water_plane.draw();
 
 
