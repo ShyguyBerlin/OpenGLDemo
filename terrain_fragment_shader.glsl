@@ -13,9 +13,12 @@ out vec4 FragColor;
 void main(void)
 {
   float diffuse_f = dot(normalize(light_src-worldPos),normal);
-  vec3 light_vec=-(light_src-worldPos);
-  float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(camVec-worldPos)),specular),0.f)*20.;
-  float ambient_f= 0.f;ambient;
+  vec3 light_vec=worldPos-light_src;
+  vec3 local_camVec = camVec-worldPos;
+  /*vec3 lightcam = normalize((-light_vec)+local_camVec);
+  float specular_f = max(pow(dot(lightcam,normal),specular),0.f)*20.;*/ // blinn-phong model
+  float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(local_camVec)),specular),0.f)*20.; //phong model
+  float ambient_f= ambient;
 
   float light_fac=diffuse_f+ambient_f+specular_f;
   vec3 col=color;
