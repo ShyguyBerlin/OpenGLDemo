@@ -21,6 +21,7 @@ add_executable(opengl_project
     src/helpers/shadertools.cpp
     src/helpers/VBOhelper.cpp
     src/helpers/statistics.cpp
+    src/helpers/loader.cpp
 )
 
 target_link_libraries(opengl_project
