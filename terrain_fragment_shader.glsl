@@ -6,8 +6,12 @@ layout(location = 3) in vec3 normal;
 layout(location = 4) in vec3 camVec;
 
 uniform vec3 light_src;
+
+//uniform vec3 diffuse_color; // also called "albedo" lmao // this is the color vec3
+uniform vec3 specular_color;
+uniform vec3 ambient_color;
+
 uniform float specular;
-uniform float ambient;
 
 out vec4 FragColor;
 
@@ -15,24 +19,26 @@ vec3 wave_dir=vec3(1.1f,10.f,0.4f);
 
 void main(void)
 {
+
+  vec3 albedo=color;
+
+  float wave_f=max(pow(1.f-(normal.y-0.8f)*5.f,1.f),0.f)*0.5f;
+
+  //albedo=(1.f-wave_f)*albedo+(wave_f*vec3(1.f,1.f,1.f));
+
   float diffuse_f = dot(normalize(light_src-worldPos),normal);
   vec3 light_vec=worldPos-light_src;
   vec3 local_camVec = camVec-worldPos;
+
+  // blinn-phong model
   /*vec3 lightcam = normalize((-light_vec)+local_camVec);
-  float specular_f = max(pow(dot(lightcam,normal),specular),0.f)*20.;*/ // blinn-phong model
-  float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(camVec-worldPos)),specular),0.f)*(specular+2.f)/(3.14159*2.f); // phong model
-  float ambient_f= ambient;
+  float specular_f = max(pow(dot(lightcam,normal),specular),0.f)*20.;*/ 
 
-  float light_fac=diffuse_f+ambient_f+specular_f;
+  // phong model
+  float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(camVec-worldPos)),specular),0.f)*(specular+2.f)/(3.14159*2.f);
+  float ambient_f = 1.0;
 
+  vec3 resulting_color=(albedo*diffuse_f) + (specular_color*specular_f) + (ambient_color*ambient_f);
 
-  vec3 col=color;
-
-  float wave_f=max(pow(1.f-(normal.y-0.8f)*5.f,1.f),0.f);
-
-  col=(1.f-wave_f)*col+(wave_f*vec3(1.f,1.f,1.f));
-
-  //if(screenPos.x<0.3){col.xyz=vec3(1.0,1.0,1.0);}
-  col=col*light_fac;
-  FragColor = vec4(col,1.0f);//0.5f*light_fac);
+  FragColor = vec4(resulting_color,1.0f);//0.5f*light_fac);
 }

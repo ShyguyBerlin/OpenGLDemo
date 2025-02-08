@@ -14,8 +14,8 @@ uniform float time;
 uniform vec3 camPos;
 
 float RENDER_DISTANCE=40.;
-float NOISE_GRAIN=0.9f;
-float NOISE_HEIGHT=0.4f;
+float NOISE_GRAIN=0.4f;
+float NOISE_HEIGHT=1.1f;
 
 //http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
 highp float rand(vec2 co)
@@ -45,7 +45,7 @@ float noise(vec2 p) {
     float amp = 0.5;
     float freq = 1.0;
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 8; i++) {
         sum += amp * fnoise(p * freq);
         amp *= 0.5;
         freq *= 1.5;
@@ -60,12 +60,17 @@ float noise(vec2 p) {
 }*/
 
 float calculate_y_deformation(vec2 p){
-    return NOISE_HEIGHT*noise(vec2(p.x*NOISE_GRAIN+time*NOISE_GRAIN*1.1,p.y*NOISE_GRAIN-time*NOISE_GRAIN*0.4));
+    float height = noise(vec2(p.x*NOISE_GRAIN+time*NOISE_GRAIN*1.1,p.y*NOISE_GRAIN-time*NOISE_GRAIN*0.4));
+    // Trying to add some steepness to waves
+    //height = height + pow(max(0,height-0.2f),8)*64.;
+    return NOISE_HEIGHT*height;
 }
 
 vec3 calculateNormal(vec3 p){
-    vec3 gradientX = vec3(0.2f,calculate_y_deformation(vec2(p.x+0.1f,p.z))-calculate_y_deformation(vec2(p.x-0.1f,p.z)),0.f);
-    vec3 gradientZ = vec3(0.f,calculate_y_deformation(vec2(p.x,p.z+0.1f))-calculate_y_deformation(vec2(p.x,p.z-0.1f)),0.2f);
+    float offset=0.005f;
+
+    vec3 gradientX = vec3(offset*2.f,calculate_y_deformation(vec2(p.x+offset,p.z))-calculate_y_deformation(vec2(p.x-offset,p.z)),0.f);
+    vec3 gradientZ = vec3(0.f,calculate_y_deformation(vec2(p.x,p.z+offset))-calculate_y_deformation(vec2(p.x,p.z-offset)),offset*2.f);
     return normalize(-cross(gradientX,gradientZ));
 }
 

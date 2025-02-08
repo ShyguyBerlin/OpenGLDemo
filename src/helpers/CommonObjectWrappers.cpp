@@ -92,7 +92,7 @@ TerrainObject::TerrainObject(unsigned int size_X, unsigned int size_Y,float grid
 }
 
 void TerrainObject::draw(){
-    for(int i=0;i<rows;i++){
+    for(int i=rows;i>=0;i--){
         mesh.draw_strip(i*2*(cols+1),2*(cols+1));
     }
 }

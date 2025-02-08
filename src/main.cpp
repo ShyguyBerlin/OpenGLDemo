@@ -101,10 +101,10 @@ int main(int argc, char* argv[])
   // Load Shader
 
   GLuint basicShader;
-  make_shader_program(&basicShader,"vertexshader.glsl","fragshader.frag");
+  make_shader_program(&basicShader,"background_vertex_shader.glsl","background_fragment_shader.glsl");
   mesh.set_shader(basicShader);
 
-  TerrainObject water_plane(250,250,0.1f);
+  TerrainObject water_plane(500,500,0.1f);
   GLuint waterShader;
   make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
   water_plane.mesh.set_shader(waterShader);
@@ -112,8 +112,9 @@ int main(int argc, char* argv[])
   GLint timeLocation = glGetUniformLocation(waterShader, "time");
   GLint camLocation = glGetUniformLocation(waterShader, "camPos");
   GLint lightLocation = glGetUniformLocation(waterShader, "light_src");
-  GLint specularLocation = glGetUniformLocation(waterShader, "specular");
-  GLint ambientLocation = glGetUniformLocation(waterShader, "ambient");
+  GLint specularFactorLocation = glGetUniformLocation(waterShader, "specular");
+  GLint specularColorLocation = glGetUniformLocation(waterShader, "specular_color");
+  GLint ambientColorLocation = glGetUniformLocation(waterShader, "ambient_color");
 
   glEnable( GL_BLEND );
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -133,8 +134,9 @@ int main(int argc, char* argv[])
     glUniform1f(timeLocation,time);
     glUniform3f(camLocation,0.f,0.f,-3.f);
     glUniform3f(lightLocation,4.f,6.f,30.f+sin(time/4.f)*30.f);//+time*8.f);
-    glUniform1f(specularLocation,64.f);
-    glUniform1f(ambientLocation,0.02f);
+    glUniform1f(specularFactorLocation,128.f);
+    glUniform3f(specularColorLocation,0.8f,0.7f,0.3f);
+    glUniform3f(ambientColorLocation,0.005f,0.01f,0.02f);
     water_plane.draw();
 
 
