@@ -14,7 +14,7 @@ using namespace helpers;
 
 // define callbacks and functions
 void errorCallback( int iError, const char* pcDescription);
-//void resizeCallback(GLFWwindow* pWindow, int width, int height );
+void resizeCallback(GLFWwindow* pWindow, int width, int height );
 //void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods);
 
 // global variables :(
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
   glfwSwapInterval(0);                                          // synchronize with display update
 
   // set callback functions
-  // glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
+  glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
   // glfwSetKeyCallback(pWindow, keyboardCallback);                // set the callback for key presses
 
 
@@ -166,12 +166,12 @@ void errorCallback(int iError, const char* pcDescription)
 }
 
 
-/*
+
 void resizeCallback(GLFWwindow* pWindow, int width, int height )
 {
-  g_pcRenderer->setWindowSize( width, height );
+  glViewport(0,0,width,height);
 }
-*/
+
 
 /*
 void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods)

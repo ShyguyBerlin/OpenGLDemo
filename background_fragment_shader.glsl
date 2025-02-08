@@ -5,6 +5,6 @@ out vec4 FragColor;
 void main(void)
 {
   vec3 HorizonColor=vec3(0.7f,0.4f,0.1f);
-  vec3 SkyColor= vec3(0.05f,0.2f,0.3f);
-  FragColor = vec4(mix(HorizonColor,SkyColor,(pow(pow(fragPos.y+1.5f,2.f)+pow(abs(fragPos.x)/2.f,2.f),0.5f))/2.f),1.f);
+  vec3 SkyColor= vec3(0.034f,0.13f,0.15f);
+  FragColor = vec4(mix(HorizonColor,SkyColor,(pow(pow(fragPos.y+1.8f,2.f)+pow(abs(fragPos.x)/2.f,2.f),0.5f))/2.f),1.f);
 }
