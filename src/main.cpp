@@ -2,10 +2,11 @@
 #include <glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <cmath>
 
-#include <fstream>
-
-#include <helpers/VBOhelper.h>
+#include <helpers/statistics.h>
+#include <helpers/shadertools.h>
+#include <helpers/CommonObjectWrappers.h>
 
 using namespace helpers;
 
@@ -16,40 +17,22 @@ void errorCallback( int iError, const char* pcDescription);
 //void resizeCallback(GLFWwindow* pWindow, int width, int height );
 //void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods);
 
-char* filetobuf(const char *file)
-{
-    char *buffer;
-    std::ifstream t;
-    int length;
-    t.open(file);      // open input file
-    t.seekg(0, std::ios::end);    // go to the end
-    length = t.tellg();           // report location (this is the length)
-    t.seekg(0, std::ios::beg);    // go back to the beginning
-    buffer = (char*)malloc(length+1);    // allocate memory for a buffer of appropriate dimension
-    t.read(buffer, length);       // read the whole file into the buffer
-    buffer[length]='\0';
-    printf("%s",buffer
-    );
-    t.close();
-    return buffer;    
-}
-
 // global variables :(
 //RenderIf* g_pcRenderer = NULL;
 
 int main(int argc, char* argv[])
 {
 
-  const unsigned int uiWidth = 800;
-  const unsigned int uiHeight = 600;
+  const unsigned int uiWidth = 1440;
+  const unsigned int uiHeight = 900;
   GLFWwindow* pWindow;
 
   glfwSetErrorCallback(errorCallback);                          // set a callback for GLFW errors
 
   if(!glfwInit()) return -1;                                    // initialize library
 
-  glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4);               // open a OpenGL 3.2 context
-  glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4);               // open a OpenGL 4.0 context
+  glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0);
   glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
 
@@ -66,7 +49,7 @@ int main(int argc, char* argv[])
 
   glfwMakeContextCurrent(pWindow);                              // make the render context current
   gladLoadGL();                                                 // load all the GL commands
-  glfwSwapInterval(1);                                          // synchronize with display update
+  glfwSwapInterval(0);                                          // synchronize with display update
 
   // set callback functions
   // glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
@@ -76,12 +59,31 @@ int main(int argc, char* argv[])
   //Load vertices
 
   GLfloat vertices[] = {
-        1.f, 1.f, 0.f,
-        -1.f, 1.f, 0.f,
-        -1.f, -1.f, 0.f,
-        0.8f, 1.f, 0.f,
-        -1.f, -1.f, 0.f,
-        1.f, -1.f, 0.f
+        1.f, 1.f, 0.f,//
+        0.f, 1.f, 0.f,
+        0.,  0.,  0.,
+        1.,  1.,  0.,//
+        0.,  0.,  0.,
+        1.,  0.,  0.,
+        1.,  0.,  0.,//
+        0.,  0.,  0.,
+        0., -1.,  0.,
+        1.,  0.,  0.,//
+        0., -1.,  0.,
+        1., -1.,  0.,
+        0.,  1.,  0.,//
+       -1.,  1.,  0.,
+       -1.,  0.,  0.,
+        0.,  1.,  0.,//
+       -1.,  0.,  0.,
+        0.,  0.,  0.,
+        0.,  0.,  0.,//
+       -1.,  0.,  0.,
+       -1., -1.,  0.,
+        0.,  0.,  0.,//
+       -1., -1.,  0.,
+        0., -1.,  0.
+
   };
 
   const GLfloat colors[6][3] = {
@@ -92,120 +94,59 @@ int main(int argc, char* argv[])
     {  0.0,  1.0,  0.0  }, /* Green */
     {  0.0,  0.0,  1.0  } }; /* Blue */
 
-  GLuint VertexArrayID;
-  GLuint ColorArrayID;
-  GLuint VertexOjectID;
-  glGenVertexArrays(1, &VertexOjectID);
-  glBindVertexArray(VertexOjectID);
+  Mesh3D mesh(8*3);
 
-
-  glGenBuffers(1, &VertexArrayID);
-  glBindBuffer(GL_ARRAY_BUFFER, VertexArrayID);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  /* Specify that our coordinate data is going into attribute index 0, and contains two floats per vertex */
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  /* Enable attribute index 0 as being used */
-  glEnableVertexAttribArray(0);
-
-  glGenBuffers(1, &ColorArrayID);
-  glBindBuffer(GL_ARRAY_BUFFER, ColorArrayID);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-  /* Specify that our coordinate data is going into attribute index 1, and contains two floats per vertex */
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  /* Enable attribute index 0 as being used */
-  glEnableVertexAttribArray(1);
+  mesh.set_positions(vertices);
 
   // Load Shader
 
-  const char *vertfname ="vertexshader.glsl";
-  char *vertexShaderSource = filetobuf(vertfname);
+  GLuint basicShader;
+  make_shader_program(&basicShader,"background_vertex_shader.glsl","background_fragment_shader.glsl");
+  mesh.set_shader(basicShader);
 
-  printf("meh %s",vertexShaderSource);
+  TerrainObject water_plane(500,500,0.1f);
+  GLuint waterShader;
+  make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
+  water_plane.mesh.set_shader(waterShader);
 
-  unsigned int vertexShader;
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-  glCompileShader(vertexShader);
+  GLint timeLocation = glGetUniformLocation(waterShader, "time");
+  GLint camLocation = glGetUniformLocation(waterShader, "camPos");
+  GLint lightLocation = glGetUniformLocation(waterShader, "light_src");
+  GLint specularFactorLocation = glGetUniformLocation(waterShader, "specular");
+  GLint specularColorLocation = glGetUniformLocation(waterShader, "specular_color");
+  GLint ambientColorLocation = glGetUniformLocation(waterShader, "ambient_color");
 
-  {
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if(!success)
-    {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" <<
-    infoLog << std::endl;
-    }
-  }
-
-  const char *fragfname ="fragshader.frag";
-  char *fragShaderSource = filetobuf(fragfname);
-
-  printf("meh2 %s",fragShaderSource);
-
-  unsigned int fragShader;
-  fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragShader, 1, &fragShaderSource, NULL);
-  glCompileShader(fragShader);
-  {
-    int success;
-    char infoLog[512];
-    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success);
-
-    if(!success)
-    {
-    glGetShaderInfoLog(fragShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" <<
-    infoLog << std::endl;
-    }
-  }
-
-  // Linking the shaders
-
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram();
-
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragShader);
-
-  glBindAttribLocation(shaderProgram, 0, "in_Position");
-  glBindAttribLocation(shaderProgram, 1, "in_Color");
-
-  glLinkProgram(shaderProgram);
-
-  {
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-      glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-      std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" <<
-      infoLog << std::endl;
-    }
-  }
-
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragShader);
-
-  glClearColor(0.0, 0.3, 0.3, 1.0);
+  glEnable( GL_BLEND );
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
   {
+    float time=  glfwGetTime();
+
     // g_pcRenderer->render();                                     // render the triangle
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    mesh.load_shader();
+    mesh.draw();
+    
+    water_plane.mesh.load_shader();
+    glUniform1f(timeLocation,time);
+    glUniform3f(camLocation,0.f,0.f,-3.f);
+    glUniform3f(lightLocation,4.f,6.f,30.f+sin(time/4.f)*30.f);//+time*8.f);
+    glUniform1f(specularFactorLocation,128.f);
+    glUniform3f(specularColorLocation,0.8f,0.7f,0.3f);
+    glUniform3f(ambientColorLocation,0.005f,0.01f,0.02f);
+    water_plane.draw();
 
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VertexOjectID);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glFlush();                                                  // process all comands in OpenGL pipeline
 
+    fps_counter();
+
     glfwSwapBuffers(pWindow);                                   // swap front and back buffers
 
-    glfwWaitEvents();                                           // pull the process events
+    glfwPollEvents();                                           // pull the process events
   }
 
   // free renderer
