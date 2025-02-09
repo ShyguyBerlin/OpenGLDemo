@@ -27,6 +27,10 @@ namespace helpers{
                     glm::vec3 vertex;
                     fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
                     temp_vertices.push_back(vertex);
+                }else if ( strcmp( lineHeader, "vt" ) == 0 ){
+                    glm::vec2 uv;
+                    fscanf(file, "%f %f\n", &uv.x, &uv.y );
+                    temp_uvs.push_back(uv);
                 }else if ( strcmp( lineHeader, "vn" ) == 0 ){
                     glm::vec3 normal;
                     fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
