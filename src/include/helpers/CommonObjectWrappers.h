@@ -23,6 +23,7 @@ class Mesh3D{
     void set_positions(GLfloat *arr);
     void set_colors(GLfloat *arr);
     void set_normals(GLfloat *arr);
+    void set_uv(GLfloat *arr);
     void set_shader(GLuint _shader);
     void load_shader(void);
     void draw();

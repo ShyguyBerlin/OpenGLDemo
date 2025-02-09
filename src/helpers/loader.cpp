@@ -15,6 +15,7 @@ namespace helpers{
             printf("Impossible to open the file !\n");
             return false;
         }
+        int c=0;
         while( 1 ){
 
             char lineHeader[128];
@@ -40,7 +41,7 @@ namespace helpers{
                     unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
                     int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
                     if (matches != 9){
-                        printf("File can't be read by our simple parser : ( Try exporting with other options\n");
+                        printf("File can't be read by our simple parser : ( Try exporting with other options %d line %d\n",matches,c);
                         return false;
                     }
                     vertexIndices.push_back(vertexIndex[0]);
@@ -52,8 +53,12 @@ namespace helpers{
                     normalIndices.push_back(normalIndex[0]);
                     normalIndices.push_back(normalIndex[1]);
                     normalIndices.push_back(normalIndex[2]);    
+                }else{
+                    char tmp[256];
+                    fscanf_s(file, "\n", tmp);
                 }
             }
+            c++;
         }
         for( unsigned int i=0; i<vertexIndices.size(); i++ ){
             unsigned int vertexIndex = vertexIndices[i];

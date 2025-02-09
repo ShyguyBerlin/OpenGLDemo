@@ -4,7 +4,7 @@
 
 namespace helpers{
 
-Mesh3D::Mesh3D(size_t vertices) : vbo(3){
+Mesh3D::Mesh3D(size_t vertices) : vbo(4){
     vertex_count=vertices;
 }
 
@@ -25,6 +25,10 @@ void Mesh3D::set_colors(GLfloat* arr){
 
 void Mesh3D::set_normals(GLfloat* arr){
     vbo.add_attributes_float(arr,sizeof(GLfloat)*3*vertex_count,2,3);
+}
+
+void Mesh3D::set_uv(GLfloat* arr){
+    vbo.add_attributes_float(arr,sizeof(GLfloat)*2*vertex_count,3,2);
 }
 
 void Mesh3D::set_shader(GLuint _shader){

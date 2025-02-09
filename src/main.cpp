@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <vector>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -11,6 +12,9 @@
 #include <helpers/shadertools.h>
 #include <helpers/CommonObjectWrappers.h>
 #include <helpers/loader.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 using namespace helpers;
 
@@ -53,17 +57,18 @@ int main(int argc, char* argv[])
 
   glfwMakeContextCurrent(pWindow);                              // make the render context current
   gladLoadGL();                                                 // load all the GL commands
-  glfwSwapInterval(0);                                          // synchronize with display update
+  glfwSwapInterval(1);                                          // synchronize with display update
+
 
   // set callback functions
   glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
   // glfwSetKeyCallback(pWindow, keyboardCallback);                // set the callback for key presses
 
   // load a .obj file
-  std::vector< glm::vec3 > obj_vertices;
-  std::vector< glm::vec2 > obj_uvs;
-  std::vector< glm::vec3 > obj_normals; // Won't be used at the moment.
-  bool res = loadOBJ("stanford-bunny.obj", obj_vertices, obj_uvs, obj_normals);
+  //std::vector< glm::vec3 > obj_vertices;
+  //std::vector< glm::vec2 > obj_uvs;
+  //std::vector< glm::vec3 > obj_normals; // Won't be used at the moment.
+  //bool res = loadOBJ("stanford-bunny.obj", obj_vertices, obj_uvs, obj_normals);
 
   //Load vertices
 
@@ -109,9 +114,56 @@ int main(int argc, char* argv[])
 
   // Load Shader
 
+  GLuint skyboxShader;
+  make_shader_program(&skyboxShader,"background_vertex_shader.glsl","background_fragment_shader.glsl");
+  mesh.set_shader(skyboxShader);
+
+  // Imported Mesh
+
+  std::vector <glm::vec3> vertices_dw;
+  std::vector <glm::vec2> uv_dw;
+  std::vector <glm::vec3> normals_dw;
+
+  loadOBJ("asset/Random Schild.obj",vertices_dw,uv_dw,normals_dw);
+  Mesh3D driftwood(vertices_dw.size());
+  driftwood.set_positions(reinterpret_cast<GLfloat*>(vertices_dw.data()));
+  driftwood.set_normals(reinterpret_cast<GLfloat*>(normals_dw.data()));
+  driftwood.set_uv(reinterpret_cast<GLfloat*>(uv_dw.data()));
+
   GLuint basicShader;
-  make_shader_program(&basicShader,"background_vertex_shader.glsl","background_fragment_shader.glsl");
-  mesh.set_shader(basicShader);
+  make_shader_program(&basicShader,"standard_vertex_shader.glsl","standard_texture_fragment_shader.glsl");
+  driftwood.set_shader(basicShader);
+
+  // https://learnopengl.com/Getting-started/Textures
+  int width, height, nrChannels;
+  unsigned char *image_data = stbi_load("asset/ShieldMat.png", &width, &height, &nrChannels, 0); 
+  if(!image_data){
+    printf("error loading image data!\n");
+  }
+  GLuint material_texture;
+  glGenTextures(1,&material_texture);
+  
+  glBindTexture(GL_TEXTURE_2D,material_texture);
+  
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,image_data);
+  glGenerateMipmap(GL_TEXTURE_2D);
+
+  stbi_image_free(image_data);
+
+  GLint dw_timeLocation = glGetUniformLocation(basicShader, "time");
+  GLint dw_camLocation = glGetUniformLocation(basicShader, "camPos");
+  GLint dw_lightLocation = glGetUniformLocation(basicShader, "light_src");
+  GLint dw_specularFactorLocation = glGetUniformLocation(basicShader, "specular");
+  GLint dw_specularColorLocation = glGetUniformLocation(basicShader, "specular_color");
+  GLint dw_ambientColorLocation = glGetUniformLocation(basicShader, "ambient_color");
+  GLint dw_textureLocation = glGetUniformLocation(basicShader, "albedoTexture");
+
+  // water plane
 
   TerrainObject water_plane(500,500,0.1f);
   GLuint waterShader;
@@ -128,6 +180,9 @@ int main(int argc, char* argv[])
   glEnable( GL_BLEND );
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
+  //glDisable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
 
   // main loop for rendering and message parsing
   while (!glfwWindowShouldClose(pWindow))                       // Loop until the user closes the window
@@ -147,7 +202,18 @@ int main(int argc, char* argv[])
     glUniform3f(specularColorLocation,0.8f,0.7f,0.3f);
     glUniform3f(ambientColorLocation,0.005f,0.01f,0.02f);
     water_plane.draw();
-
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,material_texture);
+    driftwood.load_shader();
+    glUniform1f(dw_timeLocation,time);
+    glUniform3f(dw_camLocation,0.f,0.f,-3.f);
+    glUniform3f(dw_lightLocation,4.f,6.f,20.f+sin(time/4.f)*30.f);//+time*8.f);
+    glUniform1f(dw_specularFactorLocation,1.f);
+    glUniform3f(dw_specularColorLocation,1.0f,1.0f,1.0f);
+    glUniform3f(dw_ambientColorLocation,0.0f,0.0f,0.0f);
+    glUniform1i(dw_textureLocation,0);
+    driftwood.draw();
 
     glFlush();                                                  // process all comands in OpenGL pipeline
 
