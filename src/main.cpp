@@ -3,10 +3,14 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <helpers/statistics.h>
 #include <helpers/shadertools.h>
 #include <helpers/CommonObjectWrappers.h>
+#include <helpers/loader.h>
 
 using namespace helpers;
 
@@ -55,6 +59,11 @@ int main(int argc, char* argv[])
   glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
   // glfwSetKeyCallback(pWindow, keyboardCallback);                // set the callback for key presses
 
+  // load a .obj file
+  std::vector< glm::vec3 > obj_vertices;
+  std::vector< glm::vec2 > obj_uvs;
+  std::vector< glm::vec3 > obj_normals; // Won't be used at the moment.
+  bool res = loadOBJ("stanford-bunny.obj", obj_vertices, obj_uvs, obj_normals);
 
   //Load vertices
 
