@@ -79,7 +79,8 @@ void main(void)
 {
     worldPos=in_Position;
     normal=in_Normal;
-    worldPos+=camPos-old_camPos;
+    vec3 camDiv = vec3(camPos.x-old_camPos.x,0.f,camPos.z-old_camPos.z);
+    worldPos+=camDiv;
     old_camPos=camPos;
 
     // World Space transformation on gl_Position

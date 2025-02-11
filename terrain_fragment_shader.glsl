@@ -35,11 +35,11 @@ void main(void)
 
   float diffuse_f = dot(normalize(light_src-worldPos),normal);
   vec3 light_vec=worldPos-light_src;
-  vec3 local_camVec = camVec;
+  //vec3 local_camVec = camVec;
 
   // blinn-phong model
-  /*vec3 lightcam = normalize((-light_vec)+local_camVec);
-  float specular_f = max(pow(dot(lightcam,normal),specular),0.f)*20.;*/ 
+  /*vec3 lightcam = normalize((-light_vec)+camVec);
+  float specular_f = max(pow(dot(lightcam,normal),specular),0.f)*20.;*/
 
   // phong model
   float specular_f = max(pow(dot(normalize(light_vec-2*dot(light_vec,normal)*normal),normalize(camVec-worldPos)),specular),0.f)*(specular+2.f)/(3.14159*2.f);
