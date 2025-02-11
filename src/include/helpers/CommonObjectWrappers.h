@@ -14,7 +14,8 @@ namespace helpers{
 // 0: Position, 1: Color, 2: Normals
 class Mesh3D{
     private:
-    glm::mat4 transform; // TODO
+    
+    glm::mat4 transform; TODO("implement mesh transformation")
     VBOhelper vbo;
     size_t vertex_count;
     GLuint shader;
@@ -28,10 +29,10 @@ class Mesh3D{
     void load_shader(void);
     void draw();
     void draw_strip(GLint from, GLsizei to);
-    void translate(); // TODO
-    void rotate_X(); // TODO
-    void rotate_Y(); // TODO
-    void rotate_Z(); // TODO
+    void translate(); TODO("implement mesh transformation: translate")
+    void rotate_X(); TODO("implement mesh transformation: rotate_X")
+    void rotate_Y(); TODO("implement mesh transformation: rotate_Y")
+    void rotate_Z(); TODO("implement mesh transformation: rotate_Z")
 };
 
 // To use this, create with constructer, set the sizes you want, then call obj.mesh.set_shader() and then obj.draw()

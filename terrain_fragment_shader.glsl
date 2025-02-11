@@ -24,7 +24,7 @@ void main(void)
 
   float wave_f=max(pow(1.f-(normal.y-0.8f)*5.f,1.f),0.f)*0.5f;
 
-  //albedo=(1.f-wave_f)*albedo+(wave_f*vec3(1.f,1.f,1.f));
+  albedo=(1.f-wave_f)*albedo+(wave_f*vec3(1.f,1.f,1.f));
 
   float diffuse_f = dot(normalize(light_src-worldPos),normal);
   vec3 light_vec=worldPos-light_src;

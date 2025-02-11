@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
   std::vector <glm::vec2> uv_dw;
   std::vector <glm::vec3> normals_dw;
 
-  loadOBJ("asset/Random Schild.obj",vertices_dw,uv_dw,normals_dw);
+  loadOBJ("asset/Driftwood.obj",vertices_dw,uv_dw,normals_dw);
   Mesh3D driftwood(vertices_dw.size());
   driftwood.set_positions(reinterpret_cast<GLfloat*>(vertices_dw.data()));
   driftwood.set_normals(reinterpret_cast<GLfloat*>(normals_dw.data()));
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
 
   // https://learnopengl.com/Getting-started/Textures
   int width, height, nrChannels;
-  unsigned char *image_data = stbi_load("asset/ShieldMat.png", &width, &height, &nrChannels, 0); 
+  unsigned char *image_data = stbi_load("asset/Driftwood.png", &width, &height, &nrChannels, 0); 
   if(!image_data){
     printf("error loading image data!\n");
   }

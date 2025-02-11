@@ -60,7 +60,7 @@ float noise(vec2 p) {
 }*/
 
 float calculate_y_deformation(vec2 p){
-    float height = noise(vec2(p.x*NOISE_GRAIN+time*NOISE_GRAIN*1.1,p.y*NOISE_GRAIN-time*NOISE_GRAIN*0.4));
+    float height = noise(vec2(p.x*NOISE_GRAIN+time*NOISE_GRAIN*1.1+20.f,p.y*NOISE_GRAIN-time*NOISE_GRAIN*0.4));
     // Trying to add some steepness to waves
     //height = height + pow(max(0,height-0.2f),8)*64.;
     return NOISE_HEIGHT*height;
