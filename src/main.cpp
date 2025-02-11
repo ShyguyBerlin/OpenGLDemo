@@ -33,6 +33,8 @@ bool camMov[]={false,false,false,false,false,false};
 
 std::vector<float> camPos = {0.f,0.f,-3.f};
 
+float screen_ratio=16.f/9.f;
+
 int main(int argc, char* argv[])
 {
 
@@ -54,6 +56,7 @@ int main(int argc, char* argv[])
   glfwWindowHint(GLFW_SAMPLES, 4);                              // multisampling 
 
   pWindow = glfwCreateWindow( uiWidth, uiHeight, "OpenGL Demo", NULL, NULL); // opens the window
+  screen_ratio=(float)uiWidth/(float)uiHeight;
   if(!pWindow)
   {
     glfwTerminate();
@@ -167,6 +170,7 @@ int main(int argc, char* argv[])
   GLint dw_specularColorLocation = glGetUniformLocation(basicShader, "specular_color");
   GLint dw_ambientColorLocation = glGetUniformLocation(basicShader, "ambient_color");
   GLint dw_textureLocation = glGetUniformLocation(basicShader, "albedoTexture");
+  GLint dw_srLocation = glGetUniformLocation(basicShader, "screen_ratio");
 
   // water plane
 
@@ -181,6 +185,7 @@ int main(int argc, char* argv[])
   GLint specularFactorLocation = glGetUniformLocation(waterShader, "specular");
   GLint specularColorLocation = glGetUniformLocation(waterShader, "specular_color");
   GLint ambientColorLocation = glGetUniformLocation(waterShader, "ambient_color");
+  GLint srLocation = glGetUniformLocation(waterShader, "screen_ratio");
 
 
   glEnable( GL_BLEND );
@@ -207,6 +212,7 @@ int main(int argc, char* argv[])
     glUniform1f(specularFactorLocation,128.f);
     glUniform3f(specularColorLocation,0.8f,0.7f,0.3f);
     glUniform3f(ambientColorLocation,0.005f,0.01f,0.02f);
+    glUniform1f(srLocation,screen_ratio);
     water_plane.draw();
     
     glActiveTexture(GL_TEXTURE0);
@@ -219,6 +225,7 @@ int main(int argc, char* argv[])
     glUniform3f(dw_specularColorLocation,1.0f,1.0f,1.0f);
     glUniform3f(dw_ambientColorLocation,0.0f,0.0f,0.0f);
     glUniform1i(dw_textureLocation,0);
+    glUniform1f(dw_srLocation,screen_ratio);
     driftwood.draw();
 
     glFlush();                                                  // process all comands in OpenGL pipeline
@@ -251,6 +258,7 @@ void errorCallback(int iError, const char* pcDescription)
 
 void resizeCallback(GLFWwindow* pWindow, int width, int height )
 {
+  screen_ratio=(float)width/(float)height;
   glViewport(0,0,width,height);
 }
 

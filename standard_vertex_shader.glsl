@@ -11,6 +11,7 @@ layout(location = 3) out vec3 normal;
 layout(location = 4) out vec3 camVec;
 layout(location = 5) out vec2 uv;
 
+uniform float screen_ratio;
 
 uniform float time;
 uniform vec3 camPos;
@@ -48,7 +49,7 @@ void main(void)
     if(gl_Position.z<0.0f){
         //gl_Position.z=0.01f;
     }else{
-        gl_Position = vec4(gl_Position.x/gl_Position.z/cam_dist/ratio_width,gl_Position.y/gl_Position.z/cam_dist,gl_Position.z/(RENDER_DISTANCE/2.f),1);
+        gl_Position = vec4(gl_Position.x/gl_Position.z/cam_dist/screen_ratio,gl_Position.y/gl_Position.z/cam_dist,gl_Position.z/(RENDER_DISTANCE/2.f),1);
     }
     gl_Position.z-=1;
     
