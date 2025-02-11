@@ -36,6 +36,7 @@ void main(void)
     worldPos=rot_y*worldPos; 
     normal=rot_y*normal;
 
+    worldPos.y+=-6.f;
     worldPos.z+=sin(time)*2.f;
 
     // translate by cam position
