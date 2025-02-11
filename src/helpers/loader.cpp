@@ -53,9 +53,6 @@ namespace helpers{
                     normalIndices.push_back(normalIndex[0]);
                     normalIndices.push_back(normalIndex[1]);
                     normalIndices.push_back(normalIndex[2]);    
-                }else{
-                    char tmp[256];
-                    fscanf_s(file, "\n", tmp);
                 }
             }
             c++;
