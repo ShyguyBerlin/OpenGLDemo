@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
 
   // water plane
 
-  TerrainObject water_plane(500,500,0.1f);
+  TerrainObject water_plane(1000,1000,0.1f);
   GLuint waterShader;
   make_shader_program(&waterShader,"terrain_vertex_shader.glsl","terrain_fragment_shader.glsl");
   water_plane.mesh.set_shader(waterShader);
