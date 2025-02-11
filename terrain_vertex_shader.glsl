@@ -13,6 +13,7 @@ layout(location = 4) out vec3 camVec;
 uniform float time;
 uniform vec3 camPos;
 
+vec3 old_camPos = vec3(0.f,0.f,-3.f);
 float RENDER_DISTANCE=400.;
 float NOISE_GRAIN=0.4f;
 float NOISE_HEIGHT=1.1f;
@@ -78,6 +79,8 @@ void main(void)
 {
     worldPos=in_Position;
     normal=in_Normal;
+    worldPos+=camPos-old_camPos;
+    old_camPos=camPos;
 
     // World Space transformation on gl_Position
 
