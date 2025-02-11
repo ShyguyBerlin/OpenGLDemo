@@ -20,6 +20,8 @@ using namespace helpers;
 
 // #include <iostream>
 
+void doCamMovement(void);
+
 // define callbacks and functions
 void errorCallback( int iError, const char* pcDescription);
 void resizeCallback(GLFWwindow* pWindow, int width, int height );
@@ -27,6 +29,8 @@ void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction
 
 // global variables :(
 //RenderIf* g_pcRenderer = NULL;
+bool camMov[]={false,false,false,false,false,false};
+
 std::vector<float> camPos = {0.f,0.f,-3.f};
 
 int main(int argc, char* argv[])
@@ -224,6 +228,7 @@ int main(int argc, char* argv[])
     glfwSwapBuffers(pWindow);                                   // swap front and back buffers
 
     glfwPollEvents();                                           // pull the process events
+    doCamMovement();                                        
   }
 
   // free renderer
@@ -249,36 +254,51 @@ void resizeCallback(GLFWwindow* pWindow, int width, int height )
   glViewport(0,0,width,height);
 }
 
+void doCamMovement(){
+  glm::vec3 camVec[] = {glm::vec3(0.0,0.1,0.0),glm::vec3(0.0,-0.1,0.0),glm::vec3(0.1,0.0,0.0),glm::vec3(-0.1,0.0,0.0),glm::vec3(0.0,0.0,0.1),glm::vec3(0.0,0.0,-0.1)};
 
+  for(int i=0;i<6;i++){
+    if(camMov[i]){
+      camPos[0]+=camVec[i].x;
+      camPos[1]+=camVec[i].y;
+      camPos[2]+=camVec[i].z;
+    }
+  }
+}
 
 void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods)
 {
+  bool is_pressed=true;
+  if(iAction==GLFW_RELEASE){is_pressed=false;}
+
   switch (iKey)
   {
   case GLFW_KEY_W:
-    camPos[2]+=0.1;
+    camMov[4]=is_pressed;
     break;
 
   case GLFW_KEY_A:
-    camPos[0]-=0.1;
+    camMov[3]=is_pressed;
     break;
 
   case GLFW_KEY_S:
-    camPos[2]-=0.1;
+   camMov[5]=is_pressed;
     break;
 
   case GLFW_KEY_D:
-    camPos[0]+=0.1;
+    camMov[2]=is_pressed;
+    
     break;
 
   case GLFW_KEY_SPACE:
-    camPos[1]+= 0.1f;
+    camMov[0]=is_pressed;
     break;
 
   case GLFW_KEY_LEFT_SHIFT:
-    camPos[1]-= 0.1f;
+    camMov[1]=is_pressed;
     break;
   default:
     break;
   }
+
 }
