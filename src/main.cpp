@@ -23,10 +23,11 @@ using namespace helpers;
 // define callbacks and functions
 void errorCallback( int iError, const char* pcDescription);
 void resizeCallback(GLFWwindow* pWindow, int width, int height );
-//void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods);
+void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods);
 
 // global variables :(
 //RenderIf* g_pcRenderer = NULL;
+std::vector<float> camPos = {0.f,0.f,-3.f};
 
 int main(int argc, char* argv[])
 {
@@ -62,7 +63,7 @@ int main(int argc, char* argv[])
 
   // set callback functions
   glfwSetWindowSizeCallback(pWindow, resizeCallback);           // set the callback in case of window resizing
-  // glfwSetKeyCallback(pWindow, keyboardCallback);                // set the callback for key presses
+  glfwSetKeyCallback(pWindow, keyboardCallback);                // set the callback for key presses
 
   // load a .obj file
   //std::vector< glm::vec3 > obj_vertices;
@@ -177,6 +178,7 @@ int main(int argc, char* argv[])
   GLint specularColorLocation = glGetUniformLocation(waterShader, "specular_color");
   GLint ambientColorLocation = glGetUniformLocation(waterShader, "ambient_color");
 
+
   glEnable( GL_BLEND );
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
@@ -196,7 +198,7 @@ int main(int argc, char* argv[])
     
     water_plane.mesh.load_shader();
     glUniform1f(timeLocation,time);
-    glUniform3f(camLocation,0.f,0.f,-3.f);
+    glUniform3f(camLocation,camPos[0],camPos[1],camPos[2]);
     glUniform3f(lightLocation,4.f,6.f,30.f+sin(time/4.f)*30.f);//+time*8.f);
     glUniform1f(specularFactorLocation,128.f);
     glUniform3f(specularColorLocation,0.8f,0.7f,0.3f);
@@ -207,7 +209,7 @@ int main(int argc, char* argv[])
     glBindTexture(GL_TEXTURE_2D,material_texture);
     driftwood.load_shader();
     glUniform1f(dw_timeLocation,time);
-    glUniform3f(dw_camLocation,0.f,0.f,-3.f);
+    glUniform3f(dw_camLocation,camPos[0],camPos[1],camPos[2]);
     glUniform3f(dw_lightLocation,4.f,6.f,20.f+sin(time/4.f)*30.f);//+time*8.f);
     glUniform1f(dw_specularFactorLocation,1.f);
     glUniform3f(dw_specularColorLocation,1.0f,1.0f,1.0f);
@@ -248,35 +250,35 @@ void resizeCallback(GLFWwindow* pWindow, int width, int height )
 }
 
 
-/*
+
 void keyboardCallback( GLFWwindow* pWindow, int iKey, int iScancode, int iAction, int iMods)
 {
   switch (iKey)
   {
-  case GLFW_KEY_Q:
-    glfwSetWindowShouldClose(pWindow, GLFW_TRUE);
-    break;
-
-  case GLFW_KEY_K:
-    g_pcRenderer->rotY( 2.0f );
-    break;
-
-  case GLFW_KEY_L:
-    g_pcRenderer->rotY( -2.0f );
+  case GLFW_KEY_W:
+    camPos[2]+=0.1;
     break;
 
   case GLFW_KEY_A:
-    g_pcRenderer->rotX(2.0f);
+    camPos[0]-=0.1;
     break;
 
-  case GLFW_KEY_Z:
-    g_pcRenderer->rotX(-2.0f);
+  case GLFW_KEY_S:
+    camPos[2]-=0.1;
     break;
 
+  case GLFW_KEY_D:
+    camPos[0]+=0.1;
+    break;
+
+  case GLFW_KEY_SPACE:
+    camPos[1]+= 0.1f;
+    break;
+
+  case GLFW_KEY_LEFT_SHIFT:
+    camPos[1]-= 0.1f;
+    break;
   default:
-    g_pcRenderer->keyPressed(iKey);
     break;
   }
-
-  g_pcRenderer->renderCamera();
-}*/
+}

@@ -13,7 +13,7 @@ layout(location = 4) out vec3 camVec;
 uniform float time;
 uniform vec3 camPos;
 
-float RENDER_DISTANCE=40.;
+float RENDER_DISTANCE=400.;
 float NOISE_GRAIN=0.4f;
 float NOISE_HEIGHT=1.1f;
 
@@ -96,7 +96,6 @@ void main(void)
     gl_Position = vec4(worldPos - camPos, 1.0);
     float ratio_width=16./10.;
     float cam_dist=1.;
-
     gl_Position = vec4(gl_Position.x/gl_Position.z/cam_dist/ratio_width,gl_Position.y/gl_Position.z/cam_dist,gl_Position.z/(RENDER_DISTANCE/2.f),1);
     gl_Position.z-=1;
     

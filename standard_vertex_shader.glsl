@@ -16,7 +16,7 @@ uniform float time;
 uniform vec3 camPos;
 
 
-float RENDER_DISTANCE=40.;
+float RENDER_DISTANCE=400.;
 float NOISE_GRAIN=0.4f;
 float NOISE_HEIGHT=1.1f;
 
