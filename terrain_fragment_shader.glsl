@@ -17,6 +17,13 @@ out vec4 FragColor;
 
 vec3 wave_dir=vec3(1.1f,10.f,0.4f);
 
+vec3 get_sky_color(vec2 screen_uv){
+  vec3 HorizonColor=vec3(0.7f,0.4f,0.1f);
+  vec3 SkyColor= vec3(0.034f,0.13f,0.15f);
+
+  return mix(HorizonColor,SkyColor,(pow(pow(screen_uv.y+1.8f,2.f)+pow(abs(screen_uv.x)/2.f,2.f),0.5f))/2.f);
+}
+
 void main(void)
 {
 
@@ -28,7 +35,7 @@ void main(void)
 
   float diffuse_f = dot(normalize(light_src-worldPos),normal);
   vec3 light_vec=worldPos-light_src;
-  vec3 local_camVec = camVec-worldPos;
+  vec3 local_camVec = camVec;
 
   // blinn-phong model
   /*vec3 lightcam = normalize((-light_vec)+local_camVec);
@@ -40,5 +47,5 @@ void main(void)
 
   vec3 resulting_color=(albedo*diffuse_f) + (specular_color*specular_f) + (ambient_color*ambient_f);
 
-  FragColor = vec4(resulting_color,1.0f);//0.5f*light_fac);
+  FragColor = vec4(mix(resulting_color,get_sky_color(screenPos.xy),max(1.f,pow(camVec.x,2.f)+pow(camVec.z,2.f))),1.0f);//0.5f*light_fac);
 }
