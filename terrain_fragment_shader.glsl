@@ -47,5 +47,5 @@ void main(void)
 
   vec3 resulting_color=(albedo*diffuse_f) + (specular_color*specular_f) + (ambient_color*ambient_f);
 
-  FragColor = vec4(mix(resulting_color,get_sky_color(screenPos.xy),max(1.f,pow(camVec.x,2.f)+pow(camVec.z,2.f))),1.0f);//0.5f*light_fac);
+  FragColor = vec4(mix(resulting_color,get_sky_color(screenPos.xy),max(min(1.f,pow(pow(camVec.x,2.f)+pow(camVec.z,2.f),0.5f)/12.5f-3.f),0.f)),1.0f);//0.5f*light_fac);
 }

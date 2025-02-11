@@ -42,7 +42,7 @@ void main(void)
     // translate by cam position
     camVec=camPos - worldPos;
     gl_Position = vec4(worldPos - camPos, 1.0);
-    float ratio_width=16./10.;
+    float ratio_width=21./9.;
     float cam_dist=1.;
 
     if(gl_Position.z<0.0f){
