@@ -36,3 +36,6 @@ Optimally you can run any cmake wrapper in your IDE. There is a really nice exte
 ```
 $ figure this out I have no idea
 ```
+
+# Run
+Depending on your configuration the application will be created in build/opengl_project or build/DEBUG/opengl_project or similar (on windows with .exe behind the name). To run the application you NEED to run it from the projects root directory. This can be achieved by either moving the executable or executing it from a terminal with the working directory set as the projects root. This is needed because of how the shaders are loaded.

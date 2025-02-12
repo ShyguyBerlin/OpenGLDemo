@@ -42,6 +42,7 @@ float fnoise(vec2 p){
 }
 
 // AI generated (chatgpt)
+// Brown fractal
 float noise(vec2 p) {
     float sum = 0.0;
     float amp = 0.5;
